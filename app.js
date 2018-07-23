@@ -6,8 +6,12 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+require('dotenv').config()
 
 var app = express();
+
+var request = require('request');
+var rp = require('request-promise');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +25,41 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
+var urls = [];
+app.get('/getMemes', function(req, res, next) {
+	// Comment out this line:
+  //res.send('respond with a resource');
+  var cloudinary_call = process.env.CLOUDINARY_BASE_URL + "/resources/video"
+  //console.log(cloudinary_call)
+/*
+  request(cloudinary_call, function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    var parsed = JSON.parse(body).resources
+    parsed.forEach(meme => {
+      urls.push(meme.url)
+      //console.log(meme.url)
+    })
+    console.log(urls)
+  });
+  */
+  rp(cloudinary_call)
+    .then(function(body) {
+      var parsed = JSON.parse(body).resources
+      parsed.forEach(meme => {
+        urls.push(meme.url)
+      })
+    })
+    .then(function() {
+      console.log(urls)
+      res.json([{
+        urls: urls
+      }]);
+    });
+})
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
