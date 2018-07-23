@@ -31,7 +31,19 @@ app.get('/getMemes', function(req, res, next) {
   var urls = [];
 	// Comment out this line:
   //res.send('respond with a resource');
-  var cloudinary_call = process.env.CLOUDINARY_BASE_URL + "/resources/video"
+  var cloudinary_call =  {
+    uri: process.env.CLOUDINARY_BASE_URL + "/resources/video",
+    /*qs: {
+      "bool": {
+        "must": [
+          { "match": { "max_results": 500 }}
+        ]
+      }
+    } */
+    qs: {
+      max_results: 500
+    }
+  }
   //console.log(cloudinary_call)
 /*
   request(cloudinary_call, function (error, response, body) {
