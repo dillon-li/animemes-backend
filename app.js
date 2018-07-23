@@ -27,8 +27,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
-var urls = [];
 app.get('/getMemes', function(req, res, next) {
+  var urls = [];
 	// Comment out this line:
   //res.send('respond with a resource');
   var cloudinary_call = process.env.CLOUDINARY_BASE_URL + "/resources/video"
